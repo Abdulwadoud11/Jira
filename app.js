@@ -8,7 +8,8 @@ const getUsers = require('./get-users.js');
 const updateStatus = require('./update-status.js');
 const getProjects = require('./get-projects.js')
 const updateIssue = require("./update-issue.js")
-
+const jiraRoutes = require('./src/routes/jiraRoutes.js');
+const express = require('express');
 
 const createIssueAndUpdate = async () => {
   const issueType = "Task"
@@ -82,7 +83,7 @@ const getUsersFunc = async () => {
 
 // Step 1, get user account ID to be able to assign a new project to a user
 // Get users - needed to get the leadAccountID to be able to create a project!
-getUsersFunc();
+// getUsersFunc();
 
 // Step 2, add the accountID to the env file, save the file and run source .env and then 
 // uncomment the function call below to create a project, create an issue in that project,
@@ -109,3 +110,12 @@ getUsersFunc();
 // deleteIssueByIDFunc('KAN-6');
 
 // updateIssue1()
+
+
+const app = express();
+app.use(express.json());
+
+app.use('/api/jira', jiraRoutes);
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
