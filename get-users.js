@@ -10,7 +10,7 @@ const auth = {
   password: password
 };
 
-//Gets all users within a project using Jira Cloud REST API
+//Gets all users within a project 
 async function getUsers() {
 
   try {
@@ -19,12 +19,11 @@ async function getUsers() {
 
     const config = {
       method: 'get',
-      url: baseUrl + '/rest/api/2/users',
+      url: baseUrl + '/rest/api/3/users',
       headers: { 'Content-Type': 'application/json' },
       auth: auth
     };
     const response = await axios.request(config);
-    console.log(response.data)
     return response.data;
   } catch (error) {
     console.log('error: ')

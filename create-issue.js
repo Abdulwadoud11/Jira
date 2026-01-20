@@ -10,32 +10,56 @@ const auth = {
   password: password
 };
 
-//creates an issue in Jira Cloud using REST API 
+//creates an issue in Jira 
 async function createIssue(projectKey, issueType, summary, description) {
-
   try {
-
-    const baseUrl = 'https://' + domain + '.atlassian.net';
+    const baseUrl = `https://${domain}.atlassian.net`;
 
     const data = {
       fields: {
         project: { key: projectKey },
-        summary: summary,
-        description: description,
+        summary,
+        description: {
+          type: "doc",
+          version: 1,
+          content: [
+            {
+              type: "paragraph",
+              content: [{ type: "text", text: "First paragraph" }]
+            },
+            {
+              type: "paragraph",
+              content: [{ type: "text", text: "Second paragraph" }]
+            }
+          ]
+        },
         issuetype: { name: issueType }
       }
     };
+
     const config = {
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      },
       auth: auth
     };
-    const response = await axios.post(`${baseUrl}/rest/api/2/issue`, data, config);
+
+    const response = await axios.post(
+      `${baseUrl}/rest/api/3/issue`,
+      data,
+      config
+    );
+
     return response.data.key;
 
   } catch (error) {
-    console.log('error: ')
-    console.log(error.response.data.errors)
+    console.error(
+      "Jira error:",
+      error.response?.data || error.message
+    );
   }
 }
+
 
 module.exports = createIssue;

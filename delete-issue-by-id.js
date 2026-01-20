@@ -10,7 +10,7 @@ const auth = {
   password: password
 };
 
-//Gets all issues in a particular project using the Jira Cloud REST API
+//Gets all issues in a particular project 
 async function deleteIssueByID(issueKey) {
 
   try {
@@ -19,7 +19,7 @@ async function deleteIssueByID(issueKey) {
 
     const config = {
       method: 'delete',
-      url: baseUrl + '/rest/api/2/issue/' + issueKey,
+      url: baseUrl + '/rest/api/3/issue/' + issueKey,
       headers: { 'Content-Type': 'application/json' },
       auth: auth
     };

@@ -1,34 +1,37 @@
 var axios = require('axios');
 require('dotenv').config();
 
-const username = process.env.ATLASSIAN_USERNAME
-const password = process.env.ATLASSIAN_API_KEY
-const domain = process.env.DOMAIN
+const username = process.env.ATLASSIAN_USERNAME;
+const password = process.env.ATLASSIAN_API_KEY;
+const domain = process.env.DOMAIN;
 
 const auth = {
   username: username,
   password: password
 };
 
-//Gets all issues in a particular project using the Jira Cloud REST API
+// Get all issues in a particular project
 async function getIssues() {
-
   try {
-
     const baseUrl = 'https://' + domain + '.atlassian.net';
 
-    const config = {
-      method: 'get',
-      url: baseUrl + '/rest/api/2/search',
-      headers: { 'Content-Type': 'application/json' },
-      auth: auth
-    };
-    const response = await axios.request(config);
-    console.log(response.data)
-    return response.data;
+    const response = await axios.get(
+      `${baseUrl}/rest/api/3/search/jql`,
+      {
+        auth,
+        params: {
+          jql: 'project = KAN AND status = "In Progress"',
+          maxResults: 50,
+          fields: 'summary,status,assignee,created' // limit fields
+        }
+      }
+    );
+
+    return response.data.issues;
+
   } catch (error) {
-    console.log('error: ')
-    console.log(error.response.data.errors)
+    console.log('error:');
+    console.log(error.response?.data || error.message);
   }
 }
 
